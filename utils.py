@@ -17,24 +17,24 @@ def get_5months_before(client_id, df):
     #filtra somente para o cliente desejado
     df_cliente = df.loc[df["accountid"] == client_id]
     
-    #filtra para chamados meses antes
-    df_cliente_before = df_cliente.loc[(df_cliente["time_distance"] <= 150) & (df_cliente["time_distance"] > 0)]
-    table_before = df_cliente_before[["count", "mes_x"]].groupby(["mes_x"]).sum()
+    mes_cred = df_cliente["cred_date"].tolist()[0] #mes do credenciamento
     
-    #filtra para meses depois
-    df_cliente_after = df_cliente.loc[(df_cliente["time_distance"] >= -30) & (df_cliente["time_distance"] <= 0)]
-    table_after = df_cliente_after[["count", "mes_x"]].groupby(["mes_x"]).sum()
+    #filtra para chamados meses antes
+    df_cliente_before = df_cliente.loc[(df_cliente["date_ref"].month >= mes_cred-5) & (df_cliente["date_ref"].month < mes_cred)]
+    
+    #filtra para mes do credenciamento
+    df_cliente_after = df_cliente.loc[df_cliente["date_ref"].month == mes_cred]
     
     #se não teve nenhum chamado antes
-    if(table_before.shape[0] == 0):
+    if(df_cliente_before.shape[0] == 0):
         before = 0
     else:
-        before = table_before.mean()[0]
+        before = df_cliente_before['count'].sum()/5
         
     #se não teve nenhum chamado depois
-    if(table_after.shape[0] == 0):
+    if(df_cliente_after.shape[0] == 0):
         after = 0
     else:
-        after = table_after.mean()[0]
+        after = df_cliente_after['count'].sum()
     
     return [before, after]
