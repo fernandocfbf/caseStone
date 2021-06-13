@@ -17,13 +17,13 @@ def get_5months_before(client_id, df):
     #filtra somente para o cliente desejado
     df_cliente = df.loc[df["accountid"] == client_id]
     
-    mes_cred = df_cliente["cred_date"].tolist()[0] #mes do credenciamento
+    mes_cred = df_cliente["cred_date"].tolist()[0].month #mes do credenciamento
     
     #filtra para chamados meses antes
-    df_cliente_before = df_cliente.loc[(df_cliente["date_ref"].month >= mes_cred-5) & (df_cliente["date_ref"].month < mes_cred)]
+    df_cliente_before = df_cliente.loc[(df_cliente["mes_x"] >= mes_cred-5) & (df_cliente["mes_x"] < mes_cred)]
     
     #filtra para mes do credenciamento
-    df_cliente_after = df_cliente.loc[df_cliente["date_ref"].month == mes_cred]
+    df_cliente_after = df_cliente.loc[df_cliente["mes_x"] == mes_cred]
     
     #se não teve nenhum chamado antes
     if(df_cliente_before.shape[0] == 0):
