@@ -38,3 +38,35 @@ def get_5months_before(client_id, df):
         after = df_cliente_after['count'].sum()
     
     return [before, after]
+
+def transforma_avaliação(val):
+    """
+    Função resposável por transformar a avaliação do cliente em um número inteiro.
+    Recebe: avaliação (string)
+    Retorna: número da avaliação transformada (inteiro)
+    """
+    if val in ["Incrivel", "Bom", "Feliz"]:
+        return 1
+    elif val in ["Enviado", "Normal"]:
+        return 0
+    else:
+        return -1
+    
+def recentemente_credenciado(data_att, data_cred):
+    """
+    Função responsável por determinar se o cliente foi credenciado recentemente ou não
+    Recebe: data do atendimento (datetime), data do credenciamento (datetime)
+    Retorna: valor binário (1 se recente, 0 caso contrário)
+    """
+    
+    try:
+        diff = (data_att - data_cred).days #diferença em dias
+        
+        #se for recente retorna 1 se não 0
+        if diff <= 60 and diff >= 0:
+            return 1
+        return 0
+    
+    #se uma das datas não existir retorna 0
+    except:
+        return 0
